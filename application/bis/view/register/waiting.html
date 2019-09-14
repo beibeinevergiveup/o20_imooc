@@ -1,0 +1,18 @@
+<!--包含头部文件-->
+{include file="public/header" /}
+<div class="cl pd-5 bg-1 bk-gray mt-20">
+    <h1></h1>
+    {if condition='$detail.status eq 0'}
+    <h1>审核中， 如果通过系统会发邮件通知你</h1>
+    {elseif condition='$detail.status eq 1'}
+    <h1>恭喜你，审核通过</h1>
+    {elseif condition='$detail.status eq 2'}
+    <h1>抱歉，未能通过，请重新提交申请</h1>
+    {else}
+    <h1>不存在该入驻申请情况</h1>
+    {/if}
+
+</div>
+{include file="public/footer" /}
+</body>
+</html>
