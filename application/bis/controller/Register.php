@@ -39,7 +39,7 @@ class Register extends Controller
         }
 //        print_r($lnglat); exit;
         $bisData = [
-            'name' => $data['name'],
+            'name' => htmlentities($data['name']),
             'city_id' => $data['city_id'],
             'city_path' => empty($data['se_city_id']) ? $data['city_id'] : $data['city_id'] . ',' . $data['se_city_id'],
             'logo' => $data['logo'],

@@ -5,17 +5,17 @@
     <div class="w-bread-crumb">
       <ul class="crumb-list">
         <li class="crumb"><a>团购</a><span class="ico-gt">&gt;</span></li>
-        <li class="crumb"><a>{$category->name}</a><span class="ico-gt">&gt;</span></li>
-        <li class="crumb crumb-last"><a>{$locations[0]->name}</a></li>
+
+        <li class="crumb crumb-last"><a>{$deal.category_id|getCategory}</a></li>
       </ul>
     </div>
   </div>
   <div class="static-hook-real static-hook-id-5"></div>
   <div class="p-item-info">
     <div class="w-item-info">
-      <h2>{$locations[0]->name}</h2>
+      <h2>{$deal.name}</h2>
       <div class="item-title">
-        <span class="text-main">{$deal->name}</span>
+        <span class="text-main">{$deal.description}</span>
       </div>
       <div class="ii-images static-hook-real static-hook-id-6">
         <div class="w-item-images">
@@ -27,14 +27,16 @@
           </div>
           <ul class="images-list clearfix">
             <li class="images images-last">
-              <img src="{$deal->image}" />
+              <img src="{$deal.image}" />
             </li>
           </ul>
           <div class="erweima-share-collect">
             <ul class="item-option clearfix">
               <li class=" ">
 
+                <div class="collect-success">
 
+                </div>
               </li>
             </ul>
           </div>
@@ -46,32 +48,37 @@
             <div class="price-area has-promotion-icon">
               <div class="pic-price-area">
                 <span class="unit">¥</span>
-                <span class="priceNum">{$deal->current_price}</span>
+                <span class="priceNum">{$deal.current_price}</span>
               </div>
 
               <div class="market-price-area">
-                <div class="price">¥{$deal->origin_price}</div>
+                <div class="price">{$deal.origin_price}</div>
                 <div class="name">价值</div>
               </div>
+
+
             </div>
           </div>
-          {eq name="flag" value="1"}
+          {eq name='flag' value= '1'}
           <div class="static-hook-real static-hook-id-9">
             <a class="link jingxuan-box" alt="更多精选品牌特惠">
               <div class="box">
+
                 <div class="jx-update" id="j-jxUpdateTime">
-                  <span>距开始时间还有:</span>
-                  <span class="jx-timerbox">{$timedata}</span>
+                  <span>距离开始时间还有</span>
+                  <span class="jx-timerbox" id="time"></span>
                 </div>
+
               </div>
             </a>
+
           </div>
           {/eq}
           <ul class="ugc-strategy-area static-hook-real static-hook-id-10">
             <li class="item-bought">
               <div class="sl-wrap">
                 <div class="sl-wrap-cnt">
-                  <div class="item-bought-num"><span class="intro-strong">{$deal->buy_count}</span>人已团购</div>
+                  <div class="item-bought-num"><span class="intro-strong">{$deal.buy_count}</span>人已团购</div>
                 </div>
               </div>
             </li>
@@ -81,7 +88,7 @@
               <div class="validdate-buycount-area static-hook-real static-hook-id-11">
                 <div class="item-countdown-row">
                   <span class="name">有效期</span>
-                  <span class="value">{$deal.coupons_end_time|date="Y-m-d H:i:s",###}</span>
+                  <span class="value">{$deal->coupons_end_time|date="Y-m-d H:i:s", ###}</span>
                 </div>
                 <div class="item-buycount-row j-item-buycount-row">
                   <div class="name">数&nbsp;&nbsp;&nbsp;量</div>
@@ -91,19 +98,18 @@
                     <a href="javascript:;" class="ctrl j-ctrl plus "><span class="horizontal"></span><span class="vertical"></span></a>
                   </div>
                   <div class="text-wrap">
-                    <span class="left-budget">优惠价剩余{$overplus}份</span>
+                    <span class="left-budget">优惠价剩余{$over_count}份</span>
                     <span class="err-wrap j-err-wrap"></span>
                   </div>
                 </div>
               </div>
               <div class="item-buy-area">
                 <div style="float:left" class="static-hook-real static-hook-id-12">
-                  {if condition="$flag eq 1"}
-                  <a  class="btn-buy btn-buy-qrnew j-btn-buy btn-hit" style="background: #C0C0C0;border-bottom:#C0C0C0; ">立即抢购</a>
-                  {else /}
-                  <a href="" class="btn-buy btn-buy-qrnew j-btn-buy btn-hit">立即抢购</a>
+                  {if condition='($flag eq 1) OR ($over_count eq 0)'}
+                  <a style="background-color: rgba(173,173,173,0.93)" class="btn-buy btn-buy-qrnew j-btn-buy btn-hit">立即抢购</a>
+                  {else}
+                  <a href="" class="btn-buy btn-buy-qrnew j-btn-buy btn-hit o2o_click">立即抢购</a>
                   {/if}
-
                 </div>
               </div>
             </div>
@@ -138,66 +144,27 @@
               <h3 class="w-section-header">分店信息</h3>
               <div class="branch-content">
                 <div class="shop-map">
-                  <div class="w-map">
-
-                    <img src="{:url('map/getMapImage', ['data'=>$mapstr])}">
-                  </div>
+                  <img src="{:url('Map/getMapImage',['data'=>$xypoint])}">
                 </div>
                 <div class="branch-detail">
                   <div>
-
                     <div class="branch-list-content">
                       <div class="w-branch-list">
+                        {volist name='locations' id='vo'}
                         <ul class="branch-list-content">
                           <li class="branch branch-open">
-                            <a href="//www.nuomi.com/shop/133957" target="_blank" class="branch-name">好伦哥(西坝河店)</a>
-                            <p class="branch-address">北京市朝阳区西坝河东里83号商业用楼（国际展览中心对面）</p>
-                            <p class="branch-tel">01064655007</p>
+                            <a href="" target="_blank" class="branch-name">{$vo.name}</a>
+                            <p class="branch-address">{$vo.api_address}</p>
+                            <p class="branch-tel">{$vo.tel}</p>
                             <p class="map-travel">
-
-                            </p>
-                          </li>
-                          <li class="branch branch-close">
-                            <a href="//www.nuomi.com/shop/133957" target="_blank" class="branch-name">好伦哥(西坝河店)</a>
-                            <p class="branch-address">北京市朝阳区西坝河东里83号商业用楼（国际展览中心对面）</p>
-                            <p class="branch-tel">01064655007</p>
-                            <p class="map-travel">
-
-                            </p>
-                          </li>
-                          <li class="branch branch-close">
-                            <a href="//www.nuomi.com/shop/133957" target="_blank" class="branch-name">好伦哥(西坝河店)</a>
-                            <p class="branch-address">北京市朝阳区西坝河东里83号商业用楼（国际展览中心对面）</p>
-                            <p class="branch-tel">01064655007</p>
-                            <p class="map-travel">
-
-                            </p>
-                          </li>
-                          <li class="branch branch-close">
-                            <a href="//www.nuomi.com/shop/133957" target="_blank" class="branch-name">好伦哥(西坝河店)</a>
-                            <p class="branch-address">北京市朝阳区西坝河东里83号商业用楼（国际展览中心对面）</p>
-                            <p class="branch-tel">01064655007</p>
-                            <p class="map-travel">
-
-                            </p>
-                          </li>
-                          <li class="branch branch-close">
-                            <a href="//www.nuomi.com/shop/133957" target="_blank" class="branch-name">好伦哥(西坝河店)</a>
-                            <p class="branch-address">北京市朝阳区西坝河东里83号商业用楼（国际展览中心对面）</p>
-                            <p class="branch-tel">01064655007</p>
-                            <p class="map-travel">
-
-                            </p>
-                          </li>
-                          <li class="branch branch-close">
-                            <a href="//www.nuomi.com/shop/133957" target="_blank" class="branch-name">好伦哥(西坝河店)</a>
-                            <p class="branch-address">北京市朝阳区西坝河东里83号商业用楼（国际展览中心对面）</p>
-                            <p class="branch-tel">01064655007</p>
-                            <p class="map-travel">
-
+                              <a href="javascript:;" class="map">
+                                <span class="icon"></span>
+                                <span class="text">查询地图</span>
+                              </a>
                             </p>
                           </li>
                         </ul>
+                        {/volist}
                       </div>
                     </div>
                   </div>
@@ -205,10 +172,10 @@
               </div>
             </div>
           </div>
-          <div class="ifram">本单详情（此处高度随着填充的内容自动变化）</div>
+          <div class="ifram">{$deal.description}</div>
         </li>
-        <li class="tab"><div class="ifram">消费提示（此处高度随着填充的内容自动变化）</div></li>
-        <li class="tab"><div class="ifram">商家介绍（此处高度随着填充的内容自动变化）</div></li>
+        <li class="tab"><div class="ifram">{$deal.notes}</div></li>
+        <li class="tab"><div class="ifram">{$bis.description}</div></li>
       </ul>
     </div>
   </div>
@@ -229,6 +196,21 @@
 </div>
 
 <script>
+  window.setInterval(getTime,1000);
+  function getTime(){
+  $.ajax({
+    type:'GET',
+    url:"{:url('Detail/getTime')}",
+    data:"id={$id}",
+    dataType:"json",
+    success:function (data) {
+      if (data.status) {
+          console.log(data.data.num);
+          $('#time').html(data.data.num);
+
+      }
+    }
+  });}
   //校验正整数
   function isNaN(number){
     var reg = /^[1-9]\d*$/;
@@ -258,6 +240,11 @@
     var num = $(".buycount-ctrl input").val();
     num--;
     inputChange(num);
+  });
+  $(".o2o_click").click(function () {
+    var count = $(".buycount-ctrl input").val();
+    url = "{:url('order/confirm',['id' => $deal.id])}"+"$count="+count;
+    window.open(url);
   });
   $(".plus").click(function(){
     var num = $(".buycount-ctrl input").val();

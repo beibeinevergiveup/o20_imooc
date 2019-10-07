@@ -44,8 +44,8 @@ class Category extends Controller
             $this->error($validate->getError());
         }
         if (!empty($data['id'])) {
-          $this->obj->update($data);
-            return $this->success('修改成功');
+            $this->obj->update($data);
+            $this->success('修改成功');
         }
         $res = $this->obj->add($data);
         if ($res) {
@@ -73,6 +73,7 @@ class Category extends Controller
 
     public function listorder($id, $listorder)
     {
+        //$_SERVER['HTTP_REFERER'] 获取前一页面的地址
         $res = $this->obj->save(['listorder' => $listorder], ['id' => $id]);
         if ($res) {
             $this->result($_SERVER['HTTP_REFERER'], 1, '更新成功');

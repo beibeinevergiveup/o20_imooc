@@ -37,6 +37,17 @@ class Bis extends Controller
             ]
             );
     }
+
+    public function applybis()
+    {
+        $locationData = model('BisLocation')->getNormalBisLocation();
+        foreach ($locationData as $k => $v) {
+            $v['bis_name'] = model('bis')->get(['id' => $v['bis_id']])['name'];
+        }
+        return $this->fetch('', [
+            'location' => $locationData,
+        ]);
+    }
     public function deteledbis()
     {
         $list = $this->obj->getBisByStatus(-1);
@@ -112,6 +123,16 @@ class Bis extends Controller
         $account = model('BisAccount')
             ->save(['status'=>$data['status']],['bis_id'=>$data['id'], 'is_main' => 1,]);
         if ($res && $location && $account) {
+            $this->success('状态更新成功');
+        }else{
+            $this->error('状态更新失败');
+        }
+    }
+    public function BisStatus(){
+        $data = input('get.');
+        $location = model('BisLocation')
+            ->save(['status'=>$data['status']], ['is_main' => 0,'id'=>$data['id']]);
+        if ($location) {
             $this->success('状态更新成功');
         }else{
             $this->error('状态更新失败');
